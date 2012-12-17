@@ -1,5 +1,5 @@
 #summary All scripts used in content editor web parts and their pupose.
-= Introduction =
+= Content Editor Web Part (CEWP) Scripts =
 
 *Create Tabs within a specified zone:*
 
