@@ -1,0 +1,124 @@
+# Content Editor Web Part (CEWP) Scripts #
+
+**Create Tabs within a specified zone:**
+
+
+
+&lt;style type="text/css"&gt;
+
+
+.et-tab{font-size:8pt;font-weight:bold;padding:3px 10px;display:inline-block;cursor:pointer;}
+.et-activetab{border:solid 1px #ffe6a0;color:#003399;background:#ffe6a0 url("/_layouts/images/selectednav.gif") repeat-x;}
+.et-inactivetab{color:#003399;background:#e3efff url("/_layouts/images/topnavunselected.gif") repeat-x;border:solid 1px #c2dcff;}
+.et-separator{height:5px;background-color:#ffe6a0;}
+.et-tabrow{white-space:nowrap;}
+.et-offscreen{position:absolute;max-height:1px;max-width:1px;top:-9999px;}
+
+
+&lt;/style&gt;
+
+
+
+
+&lt;script type="text/javascript"&gt;
+
+
+/**Easy Tabs v 5.0** Copyright (c) 2009-2010 Christophe Humbert **http://www.pathtosharepoint.com**/
+(function(){
+var AP="",sec=0,Header="none",Split="No",Expand="",Print="";
+if (document.forms[0](0.md).elements["_wikiPageMode.value"]=="true"||document.forms[0](0.md).elements["MSOLayout\_InDesignMode"].value=="1"){return;}
+var el=document.getElementsByTagName("SCRIPT"),p=el[el.length-1],sT,a,sep,tabRow;
+do {p=p.parentNode;sT=p.innerHTML.split("MSOZoneCell\_WebPart");}while (sT.length<4 && p.parentNode.id!="MSO\_ContentTable")
+if (p.getAttribute("contenteditable")=="true"){return;}
+if (p.nodeName=="DIV"){sep=document.createElement("div");p.insertBefore(sep,p.firstChild);tabRow=document.createElement("div");p.insertBefore(tabRow,p.firstChild);}
+else{sep=document.createElement("td");var sepTR=document.createElement("tr");sepTR.appendChild(sep);tabRow=document.createElement("td");var tabTR=document.createElement("tr");tabTR.appendChild(tabRow);if (p.nodeName=="TBODY"){p.insertBefore(sepTR,p.firstChild);p.insertBefore(tabTR,p.firstChild);}else if (p.nodeName=="TR"){p.parentNode.insertBefore(tabTR,p);p.parentNode.insertBefore(sepTR,p);}else {return;}}
+sep.className="et-separator";tabRow.className="et-tabrow";var children=p.childNodes;p=p.parentNode;var etRoot=[.md](.md),etHeader=[.md](.md),etTab=[.md](.md),tabsID=[.md](.md);
+for (var j=0;j<children.length;j++){try{var d=children[j](j.md).getElementsByTagName("td");for (i=0;i<d.length;i++) {if(d[i](i.md).id.indexOf("WebPartTitle")==0){var WPid=d[i](i.md).id.replace(/WebPartTitle/,"");if (d[i](i.md).innerHTML.indexOf("(Hidden)")==-1) {var up=d[i](i.md);while (up!=children[j](j.md)){if (up.parentNode.innerHTML.indexOf('id=WebPart'+WPid+' ')>=0||up.parentNode.innerHTML.indexOf('id="WebPart'+WPid+'" ')>=0){WPid="et"+WPid;etHeader[WPid](WPid.md)=up;etRoot[WPid](WPid.md)=children[j](j.md);etTab[WPid](WPid.md)=d[i](i.md).getElementsByTagName("span")[0](0.md).cloneNode(true);etTab[WPid](WPid.md).id=WPid;etTab[WPid](WPid.md).className="et-tab et-inactivetab";etTab[WPid](WPid.md).onclick=function(){activateTab(this);};tabRow.appendChild(etTab[WPid](WPid.md));tabsID.push(WPid);break;}up=up.parentNode;}}}}}catch(e){}}
+var Tabs=tabRow.getElementsByTagName("span"),TabCount=Tabs.length;
+if (Split=="Yes") {var sd=document.createElement("div"),index=Math.floor(TabCount\*0.5);tabRow.insertBefore(sd,Tabs[index](index.md));}
+if(AP.length && sec>0) {sec=sec\*1000;interval="";a=document.createElement("span");a.innerHTML="|>";a.className="et-tab et-inactivetab";a.onclick=function(){if(interval==""){this.innerHTML="_|";interval=window.setInterval(function(){Autoplay();},sec)}else{this.innerHTML="|>";window.clearInterval(interval);interval=""}};tabRow.appendChild(a);var Autoplay=function(){for(i=0;i<TabCount;i++)if(Tabs[i](i.md).className=="et-tab et-activetab"){var j=(i+1)%TabCount;activateTab(Tabs[j](j.md));break}};if (AP=="Play"){a.innerHTML="||";interval=window.setInterval(function(){Autoplay();},sec)};}|
+|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+if (Expand.length) {a=document.createElement("span");a.innerHTML=Expand;a.className="et-tab et-inactivetab";a.onclick=function(){for(i=0;i<tabsID.length;i++){etTab[tabsID[i](i.md)].className="et-tab et-inactivetab";etRoot[tabsID[i](i.md)].className=etRoot[tabsID[i](i.md)].className.replace(/et-offscreen/g,"");etRoot[tabsID[i](i.md)].style.pageBreakAfter="always";etHeader[tabsID[i](i.md)].style.display="";}};tabRow.appendChild(a);}
+if (Print.length) {a=document.createElement("span");a.innerHTML=Print;a.className="et-tab et-inactivetab";a.onclick=function(){this.style.display="none";var f=document.getElementById("s4-workspace")||document.getElementsByTagName("body")[0](0.md),ed=p.parentNode.insertBefore(document.createElement(p.nodeName),p);f.appendChild(p);for (j=0;j<f.childNodes.length-1;j++) {try{f.childNodes[j](j.md).className+=" et-offscreen";}catch(e){}}a=document.createElement("span");a.innerHTML="Back to Page";a.className="et-tab et-inactivetab";a.onclick=function(){this.previousSibling.style.display="inline-block";this.parentNode.removeChild(this);ed.parentNode.insertBefore(p,ed);ed.parentNode.removeChild(ed);for (j=0;j<f.childNodes.length;j++) {try{f.childNodes[j](j.md).className=f.childNodes[j](j.md).className.replace(/\s\*et-offscreen/g,"");}catch(e){}}};tabRow.appendChild(a);};tabRow.appendChild(a);}
+function activateTab(t){document.cookie=tabsID.join("_")+"="+t.id+";path=/";for(i=0;i<tabsID.length;i++){etHeader[tabsID[i](i.md)].style.display=Header;if(t.id==tabsID[i](i.md)){etTab[tabsID[i](i.md)].className="et-tab et-activetab";etRoot[tabsID[i](i.md)].className=etRoot[tabsID[i](i.md)].className.replace(/\s\*et-offscreen/g,"");}else{etTab[tabsID[i](i.md)].className="et-tab et-inactivetab";etRoot[tabsID[i](i.md)].className+=" et-offscreen";}}}var m=GetCookie(tabsID.join("_"))?GetCookie(tabsID.join("_")):tabsID[0](0.md);activateTab(etTab[m](m.md));})();
+
+
+&lt;/script&gt;_
+
+
+**Translate Text to HTML**
+
+
+
+&lt;script type="text/javascript"&gt;
+
+
+/**Text to HTML - version 2.1.1
+Questions and comments: Christophe@PathToSharePoint.com**/
+
+function TextToHTML(NodeSet, HTMLregexp) {
+var CellContent = "";
+var i=0;
+while (i < NodeSet.length){
+try {
+CellContent = NodeSet[i](i.md).innerText || NodeSet[i](i.md).textContent;
+if (HTMLregexp.test(CellContent)) {NodeSet[i](i.md).innerHTML = CellContent;}
+}
+catch(err){}
+i=i+1;
+}
+}
+
+// Calendar views
+var regexpA = new RegExp("\\s**<([a-zA-Z]**)(.|\\s)**/\\1?>\\s**");
+TextToHTML(document.getElementsByTagName("a"),regexpA);
+
+// List views
+var regexpTD = new RegExp("^\\s**<([a-zA-Z]**)(.|\\s)**/\\1?>\\s**$");
+TextToHTML(document.getElementsByTagName("TD"),regexpTD);
+
+// Grouped list views
+ExpGroupRenderData = (function (old) {
+> return function (htmlToRender, groupName, isLoaded) {
+> var result = old(htmlToRender, groupName, isLoaded);
+> var regexpTD = new RegExp("^\\s**<([a-zA-Z]**)(.|\\s)**/\\1?>\\s**$");
+> TextToHTML(document.getElementsByTagName("TD"),regexpTD);
+> };
+})(ExpGroupRenderData);
+
+// Preview pane views
+if (typeof(showpreview1)=="function") {
+showpreview1 = (function (old) {
+> return function (o) {
+> var result = old(o);
+> var regexpTD = new RegExp("^\\s**<([a-zA-Z]**)(.|\\s)**/\\1?>\\s**$");
+> TextToHTML(document.getElementsByTagName("TD"),regexpTD);
+> };
+})(showpreview1);
+}
+
+
+
+&lt;/script&gt;
+
+
+
+
+**Hide the "View all Site Content" Link**
+
+
+
+&lt;style&gt;
+
+
+.ms-quicklaunchheader{display: none;}
+
+
+&lt;/style&gt;
+
+
+
+
+# Details #
+
+Each of these CEWP Scripts were made aviable via research and are _not_ original creations by the creators of ESMS.
